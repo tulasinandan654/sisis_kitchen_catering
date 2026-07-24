@@ -1,17 +1,19 @@
-import React from "react";
+import React from 'react';
+import { WHATSAPP_NUMBER, buildWhatsAppUrl } from '../lib/whatsapp';
 
-const WHATSAPP_URL =
-  "https://wa.me/919030058654?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20catering%20services.";
+const DEFAULT_MESSAGE = "Hi, I'd like to enquire about catering services.";
 
-const WhatsAppButton = () => {
+const WhatsAppButton: React.FC = () => {
+  const href = buildWhatsAppUrl(DEFAULT_MESSAGE);
   return (
     <a
-      href={WHATSAPP_URL}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
       data-testid="whatsapp-float-button"
       className="whatsapp-float-btn"
+      data-number={WHATSAPP_NUMBER}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

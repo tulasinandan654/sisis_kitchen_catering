@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Calendar, Users, MapPin, Phone, User, Mail, CheckCircle } from 'lucide-react';
-import { sendEmail } from '../lib/emailService';
+import { sendEnquiry } from '../lib/enquiryService';
 
 interface BookingFormProps {
   isOpen: boolean;
@@ -28,46 +28,23 @@ const BookingForm: React.FC<BookingFormProps> = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      // Create email content
-      const emailContent = `
-New Booking Consultation Request - Sisi's Kitchen Catering Services
-
-Customer Details:
-- Name: ${formData.name}
-- Phone: ${formData.phone}
-- Email: ${formData.email}
-
-Event Details:
-- Event Name: ${formData.eventName}
-- Event Date: ${formData.eventDate}
-- Event Time: ${formData.eventTime}
-- Number of Persons: ${formData.numberOfPersons}
-- Food Preference: ${formData.foodPreference}
-- Locality: ${formData.locality}
-
-Additional Message:
-${formData.message || 'No additional message provided'}
-
----
-This inquiry was submitted through Sisi's Kitchen Catering Services website.
-Please contact the customer within 24 hours for consultation.
-      `;
-
-      // Send email using EmailJS
-      const emailSent = await sendEmail({
-        to_email: 'tulasinandan654@gmail.com',
-        from_name: formData.name,
-        from_email: formData.email || 'noreply@sisiskitchen.com',
-        from_phone: formData.phone,
+      await sendEnquiry({
+        form_type: 'booking',
+        name: formData.name,
+        email: formData.email || undefined,
+        phone: formData.phone,
         subject: `New Booking Consultation - ${formData.eventName}`,
-        message: emailContent,
-        form_type: 'Booking Consultation'
+        message: formData.message || undefined,
+        details: {
+          event_name: formData.eventName,
+          event_date: formData.eventDate,
+          event_time: formData.eventTime,
+          number_of_persons: formData.numberOfPersons,
+          food_preference: formData.foodPreference,
+          locality: formData.locality,
+        },
       });
 
-      if (!emailSent) {
-        throw new Error('Failed to send email');
-      }
-      
       setIsSubmitted(true);
       setTimeout(() => {
         setIsSubmitted(false);

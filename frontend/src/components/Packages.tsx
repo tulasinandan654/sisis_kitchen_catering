@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, Leaf } from 'lucide-react';
+import { openWhatsApp } from '../lib/whatsapp';
 
 interface Package {
   name: string;
@@ -137,8 +138,17 @@ const Packages = () => {
             ))}
           </div>
 
-          <button className={`w-full ${buttonColor} text-white py-3 rounded-lg font-semibold transition-colors`}>
-            Get Quote
+          <button
+            type="button"
+            data-testid={`package-quote-${pkg.name.replace(/\s+/g, '-').toLowerCase()}`}
+            onClick={() =>
+              openWhatsApp(
+                `Hi, I'd like a quote for the ${pkg.name} (₹${pkg.price}/plate). Event date: __, Guests: __.`
+              )
+            }
+            className={`w-full ${buttonColor} text-white py-3 rounded-lg font-semibold transition-colors`}
+          >
+            Get Quote on WhatsApp
           </button>
         </div>
       </div>

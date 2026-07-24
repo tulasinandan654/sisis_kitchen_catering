@@ -6,8 +6,11 @@ const Header = () => {
 
   const navLinks = [
     { label: 'Home', href: '#home' },
+    { label: 'About', href: '#about' },
+    { label: 'Services', href: '#services' },
     { label: 'Packages', href: '#packages' },
     { label: 'Custom Menu', href: '#custom-menu' },
+    { label: 'FAQ', href: '#faq' },
     { label: 'Contact', href: '#contact' }
   ];
 

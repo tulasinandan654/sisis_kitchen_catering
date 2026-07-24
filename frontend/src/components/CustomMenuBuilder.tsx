@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Check, ChevronDown, ChevronUp, Phone, Mail, Calendar, Users } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { sendEnquiry } from '../lib/enquiryService';
 
 interface MenuItem {
   id: string;
@@ -134,29 +134,22 @@ const CustomMenuBuilder = () => {
         quantity: item.quantity
       }));
 
-      if (!supabase) {
-        setSubmitMessage('Thank you! We have received your enquiry and will contact you via WhatsApp/phone shortly.');
-        setIsSubmitting(false);
-        return;
-      }
-      const { error } = await supabase
-        .from('custom_menu_requests')
-        .insert([
-          {
-            event_name: formData.eventName,
-            event_date: formData.eventDate,
-            guest_count: guestCount,
-            cuisine_type: cuisineType,
-            selected_items: selectedItemsArray,
-            estimated_price: totalItemsPrice,
-            customer_name: formData.customerName,
-            customer_email: formData.customerEmail,
-            customer_phone: formData.customerPhone,
-            special_requests: formData.specialRequests,
-          }
-        ]);
-
-      if (error) throw error;
+      await sendEnquiry({
+        form_type: 'custom_menu',
+        name: formData.customerName,
+        email: formData.customerEmail || undefined,
+        phone: formData.customerPhone || undefined,
+        subject: `Custom Menu Request - ${formData.eventName || 'Event'}`,
+        message: formData.specialRequests || undefined,
+        details: {
+          event_name: formData.eventName,
+          event_date: formData.eventDate,
+          guest_count: guestCount,
+          cuisine_type: cuisineType,
+          selected_items: selectedItemsArray,
+          estimated_price: totalItemsPrice,
+        },
+      });
 
       setSubmitMessage('Menu request submitted successfully! We will contact you soon with a quotation.');
       setFormData({

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, ShoppingCart, User, Phone, Mail, MapPin, Clock, Package, CheckCircle } from 'lucide-react';
-import { sendEmail } from '../lib/emailService';
+import { sendEnquiry } from '../lib/enquiryService';
 
 interface DeliveryOrderFormProps {
   isOpen: boolean;
@@ -39,52 +39,27 @@ const DeliveryOrderForm: React.FC<DeliveryOrderFormProps> = ({ isOpen, onClose, 
     const totalAmount = basePrice * persons;
 
     try {
-      // Create order details
-      const orderDetails = `
-New Delivery Order - Sisi's Kitchen Catering Services
-
-Package Details:
-- Package: ${selectedPackage?.name || 'Not specified'}
-- Cuisine: ${selectedPackage?.cuisine || 'Not specified'}
-- Price per person: ${selectedPackage?.price || 'Not specified'}
-- Number of persons: ${formData.numberOfPersons}
-- Total Amount: ₹${totalAmount}
-
-Customer Details:
-- Name: ${formData.name}
-- Phone: ${formData.phone}
-- Email: ${formData.email}
-
-Delivery Details:
-- Address: ${formData.address}
-- Locality: ${formData.locality}
-- Delivery Date: ${formData.deliveryDate}
-- Delivery Time: ${formData.deliveryTime}
-- Payment Method: ${formData.paymentMethod}
-
-Special Instructions:
-${formData.specialInstructions || 'No special instructions'}
-
----
-This order was placed through Sisi's Kitchen Catering Services website.
-Please confirm the order within 1 hour.
-      `;
-
-      // Send email using EmailJS
-      const emailSent = await sendEmail({
-        to_email: 'tulasinandan654@gmail.com',
-        from_name: formData.name,
-        from_email: formData.email || 'noreply@sisiskitchen.com',
-        from_phone: formData.phone,
+      await sendEnquiry({
+        form_type: 'delivery',
+        name: formData.name,
+        email: formData.email || undefined,
+        phone: formData.phone,
         subject: `New Delivery Order - ${selectedPackage?.name || 'Package'} (₹${totalAmount})`,
-        message: orderDetails,
-        form_type: 'Delivery Order'
+        message: formData.specialInstructions || undefined,
+        details: {
+          package: selectedPackage?.name,
+          cuisine: selectedPackage?.cuisine,
+          price_per_person: selectedPackage?.price,
+          number_of_persons: formData.numberOfPersons,
+          total_amount: totalAmount,
+          address: formData.address,
+          locality: formData.locality,
+          delivery_date: formData.deliveryDate,
+          delivery_time: formData.deliveryTime,
+          payment_method: formData.paymentMethod,
+        },
       });
 
-      if (!emailSent) {
-        throw new Error('Failed to send email');
-      }
-      
       setIsSubmitted(true);
       setTimeout(() => {
         setIsSubmitted(false);
