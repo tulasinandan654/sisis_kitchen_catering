@@ -80,7 +80,21 @@ const Contact: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="bg-gray-800 rounded-xl p-8">
             <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
-            <form className="space-y-4" onSubmit={handleSubmit} data-testid="contact-form">
+            <form
+              className="space-y-4"
+              onSubmit={handleSubmit}
+              data-testid="contact-form"
+              name="sisis-enquiry"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+            >
+              <input type="hidden" name="form-name" value="sisis-enquiry" />
+              <input type="hidden" name="form_type" value="contact" />
+              <p className="hidden">
+                <label>
+                  Don't fill this out: <input name="bot-field" />
+                </label>
+              </p>
               <input
                 type="text"
                 name="name"
