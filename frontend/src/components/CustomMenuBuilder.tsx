@@ -88,19 +88,6 @@ const CustomMenuBuilder = () => {
     setSelectedItems(newSelected);
   };
 
-  const updateQuantity = (itemId: string, quantity: number) => {
-    const newSelected = new Map(selectedItems);
-    const item = newSelected.get(itemId);
-    if (item) {
-      if (quantity <= 0) {
-        newSelected.delete(itemId);
-      } else {
-        newSelected.set(itemId, { ...item, quantity });
-      }
-      setSelectedItems(newSelected);
-    }
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -118,7 +105,6 @@ const CustomMenuBuilder = () => {
       const selectedItemsArray = Array.from(selectedItems.values()).map(item => ({
         id: item.id,
         name: item.name,
-        quantity: item.quantity
       }));
 
       await sendEnquiry({
@@ -231,23 +217,9 @@ const CustomMenuBuilder = () => {
                             </div>
 
                             {selectedItems.has(item.id) && (
-                              <div className="ml-4 flex items-center gap-2 bg-white rounded-lg border border-gray-300 px-2 py-1">
-                                <button
-                                  onClick={() => updateQuantity(item.id, (selectedItems.get(item.id)?.quantity || 1) - 1)}
-                                  className="px-2 py-1 text-gray-600 hover:text-gray-900"
-                                >
-                                  −
-                                </button>
-                                <span className="w-8 text-center font-semibold text-gray-900">
-                                  {selectedItems.get(item.id)?.quantity || 1}
-                                </span>
-                                <button
-                                  onClick={() => updateQuantity(item.id, (selectedItems.get(item.id)?.quantity || 1) + 1)}
-                                  className="px-2 py-1 text-gray-600 hover:text-gray-900"
-                                >
-                                  +
-                                </button>
-                              </div>
+                              <span className="ml-4 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded-full">
+                                Selected
+                              </span>
                             )}
                           </div>
                         ))}
