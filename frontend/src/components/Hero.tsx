@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChefHat, Users, Utensils, Award, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { openWhatsApp } from '../lib/whatsapp';
 
 const Hero: React.FC = () => {
@@ -58,12 +59,13 @@ const Hero: React.FC = () => {
                 <MessageCircle size={20} />
                 Get Instant Quote
               </button>
-              <a
-                href="#custom-menu"
+              <Link
+                to="/custom-menu"
+                data-testid="hero-build-menu"
                 className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
                 Build Your Menu
-              </a>
+              </Link>
               <a
                 href="#packages"
                 className="bg-white hover:bg-gray-50 text-orange-600 border-2 border-orange-600 px-6 py-3 rounded-lg font-semibold transition-colors"

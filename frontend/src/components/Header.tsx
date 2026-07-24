@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
-    { label: 'Services', href: '#services' },
-    { label: 'Packages', href: '#packages' },
-    { label: 'Custom Menu', href: '#custom-menu' },
-    { label: 'FAQ', href: '#faq' },
-    { label: 'Contact', href: '#contact' }
+    { label: 'Home', href: '/#home', to: '/' },
+    { label: 'About', href: '/#about' },
+    { label: 'Services', href: '/#services' },
+    { label: 'Packages', href: '/#packages' },
+    { label: 'Custom Menu', href: '/custom-menu', to: '/custom-menu' },
+    { label: 'FAQ', href: '/#faq' },
+    { label: 'Contact', href: '/#contact' }
   ];
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" data-testid="header-brand">
             <div className="text-2xl font-bold text-orange-600">
               Sisi's Kitchen
             </div>
             <span className="text-sm text-gray-600">Catering</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
