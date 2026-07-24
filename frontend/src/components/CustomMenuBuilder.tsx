@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ChevronDown, ChevronUp, Phone, Calendar, Users } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Phone, Calendar, Users, X, ClipboardList } from 'lucide-react';
 import { sendEnquiry } from '../lib/enquiryService';
 
 interface MenuItem {
@@ -232,6 +232,66 @@ const CustomMenuBuilder = () => {
           </div>
 
           <div className="space-y-6">
+            {/* Selected Menu Review */}
+            <div
+              className="bg-orange-50 border border-orange-200 rounded-xl shadow-sm p-6"
+              data-testid="selected-menu-summary"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <ClipboardList className="text-orange-600" size={20} />
+                  <h3 className="text-lg font-bold text-gray-900">Your Selection</h3>
+                </div>
+                <span
+                  className="text-sm font-semibold bg-orange-600 text-white px-2.5 py-0.5 rounded-full"
+                  data-testid="selected-count"
+                >
+                  {selectedItems.size}
+                </span>
+              </div>
+
+              {selectedItems.size === 0 ? (
+                <p className="text-sm text-gray-600">
+                  Tick items on the left to add them here. You'll see your full menu below before submitting.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {Array.from(
+                    Array.from(selectedItems.values()).reduce((acc, item) => {
+                      if (!acc.has(item.category)) acc.set(item.category, []);
+                      acc.get(item.category)!.push(item);
+                      return acc;
+                    }, new Map<string, SelectedItem[]>())
+                  ).map(([category, items]) => (
+                    <div key={category}>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-orange-700 mb-2">
+                        {category}
+                      </p>
+                      <ul className="space-y-1.5">
+                        {items.map((item) => (
+                          <li
+                            key={item.id}
+                            className="flex items-center justify-between bg-white rounded-lg border border-orange-100 px-3 py-2"
+                          >
+                            <span className="text-sm text-gray-800">{item.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => toggleItem(item)}
+                              className="text-gray-400 hover:text-red-500 transition-colors"
+                              aria-label={`Remove ${item.name}`}
+                              data-testid={`remove-${item.id}`}
+                            >
+                              <X size={16} />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6 border border-gray-200 space-y-4 sticky top-24">
               <h3 className="text-lg font-bold text-gray-900">Event Details</h3>
 
