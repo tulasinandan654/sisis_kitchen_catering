@@ -102,17 +102,6 @@ const CustomMenuBuilder = () => {
     }
   };
 
-  const calculatePrice = () => {
-    let total = 0;
-    selectedItems.forEach(item => {
-      total += item.price * item.quantity;
-    });
-    return total;
-  };
-
-  const totalItemsPrice = calculatePrice();
-  const pricePerGuest = guestCount > 0 ? Math.round(totalItemsPrice / guestCount) : 0;
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -130,7 +119,6 @@ const CustomMenuBuilder = () => {
       const selectedItemsArray = Array.from(selectedItems.values()).map(item => ({
         id: item.id,
         name: item.name,
-        price: item.price,
         quantity: item.quantity
       }));
 
@@ -147,7 +135,6 @@ const CustomMenuBuilder = () => {
           guest_count: guestCount,
           cuisine_type: cuisineType,
           selected_items: selectedItemsArray,
-          estimated_price: totalItemsPrice,
         },
       });
 
@@ -176,7 +163,7 @@ const CustomMenuBuilder = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Build Your Custom Menu</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Select items you want to include in your event menu and get an instant price estimate
+            Select items you want to include in your event menu. We'll send you a personalised quote based on your selections and guest count.
           </p>
         </div>
 
@@ -243,7 +230,6 @@ const CustomMenuBuilder = () => {
                                 <label htmlFor={item.id} className="text-gray-900 font-semibold cursor-pointer block">
                                   {item.name}
                                 </label>
-                                <p className="text-sm text-gray-600 mt-1">₹{item.price}/plate</p>
                               </div>
                             </div>
 
@@ -277,43 +263,7 @@ const CustomMenuBuilder = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl shadow-md p-6 border border-orange-200 sticky top-24">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Pricing Summary</h3>
-
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center pb-3 border-b border-orange-200">
-                  <span className="text-gray-700">Selected Items:</span>
-                  <span className="font-semibold text-gray-900">{selectedItems.size}</span>
-                </div>
-
-                <div className="bg-white rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-700">Total Items Cost:</span>
-                    <span className="text-2xl font-bold text-orange-600">₹{totalItemsPrice}</span>
-                  </div>
-                  <p className="text-xs text-gray-600">for {guestCount} guests</p>
-                </div>
-
-                <div className="bg-white rounded-lg p-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Per Guest Cost:</span>
-                    <span className="text-2xl font-bold text-green-600">₹{pricePerGuest}</span>
-                  </div>
-                </div>
-
-                <div className="text-sm text-gray-600 bg-white rounded-lg p-3">
-                  <p><strong>Note:</strong> This is an estimate based on selected items. Final price will include service, taxes, and delivery.</p>
-                </div>
-              </div>
-
-              {selectedItems.size === 0 && (
-                <div className="text-center py-6 bg-white rounded-lg">
-                  <p className="text-gray-600 text-sm">Select items to see pricing</p>
-                </div>
-              )}
-            </div>
-
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6 border border-gray-200 space-y-4">
+            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6 border border-gray-200 space-y-4 sticky top-24">
               <h3 className="text-lg font-bold text-gray-900">Event Details</h3>
 
               <div>
