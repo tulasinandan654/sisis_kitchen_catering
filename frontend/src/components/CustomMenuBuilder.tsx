@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ChevronDown, ChevronUp, Phone, Mail, Calendar, Users } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Phone, Calendar, Users } from 'lucide-react';
 import { sendEnquiry } from '../lib/enquiryService';
 
 interface MenuItem {
@@ -19,12 +19,11 @@ const CustomMenuBuilder = () => {
   const [cuisineType, setCuisineType] = useState<'veg' | 'non-veg' | 'mixed'>('veg');
   const [selectedItems, setSelectedItems] = useState<Map<string, SelectedItem>>(new Map());
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [guestCount, setGuestCount] = useState<number>(50);
+  const [guestCount, setGuestCount] = useState<string>('');
   const [formData, setFormData] = useState({
     eventName: '',
     eventDate: '',
     customerName: '',
-    customerEmail: '',
     customerPhone: '',
     specialRequests: ''
   });
@@ -125,14 +124,13 @@ const CustomMenuBuilder = () => {
       await sendEnquiry({
         form_type: 'custom_menu',
         name: formData.customerName,
-        email: formData.customerEmail || undefined,
         phone: formData.customerPhone || undefined,
         subject: `Custom Menu Request - ${formData.eventName || 'Event'}`,
         message: formData.specialRequests || undefined,
         details: {
           event_name: formData.eventName,
           event_date: formData.eventDate,
-          guest_count: guestCount,
+          guest_count: guestCount || 'not specified',
           cuisine_type: cuisineType,
           selected_items: selectedItemsArray,
         },
@@ -143,12 +141,11 @@ const CustomMenuBuilder = () => {
         eventName: '',
         eventDate: '',
         customerName: '',
-        customerEmail: '',
         customerPhone: '',
         specialRequests: ''
       });
       setSelectedItems(new Map());
-      setGuestCount(50);
+      setGuestCount('');
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitMessage('Error submitting request. Please try again or contact us directly.');
@@ -303,9 +300,10 @@ const CustomMenuBuilder = () => {
                 </label>
                 <input
                   type="number"
-                  min="50"
+                  min="1"
                   value={guestCount}
-                  onChange={(e) => setGuestCount(Math.max(50, parseInt(e.target.value) || 50))}
+                  onChange={(e) => setGuestCount(e.target.value)}
+                  placeholder="e.g., 50"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
@@ -329,24 +327,8 @@ const CustomMenuBuilder = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  <Mail size={16} className="inline mr-2" />
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  name="customerEmail"
-                  value={formData.customerEmail}
-                  onChange={handleInputChange}
-                  placeholder="your@email.com"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   <Phone size={16} className="inline mr-2" />
-                  Phone
+                  Phone *
                 </label>
                 <input
                   type="tel"
@@ -355,6 +337,7 @@ const CustomMenuBuilder = () => {
                   onChange={handleInputChange}
                   placeholder="Your phone number"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  required
                 />
               </div>
 
